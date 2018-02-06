@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
@@ -6,8 +6,8 @@ using Lucene.Net.Analysis;
 using Lucene.Net.Linq.Analysis;
 using Lucene.Net.Linq.Converters;
 using Lucene.Net.Linq.Util;
+using Lucene.Net.Util;
 using DateTimeConverter = Lucene.Net.Linq.Converters.DateTimeConverter;
-using Version = Lucene.Net.Util.Version;
 
 namespace Lucene.Net.Linq.Mapping
 {
@@ -17,10 +17,10 @@ namespace Lucene.Net.Linq.Mapping
 
         internal static IFieldMapper<T> Build<T>(PropertyInfo p)
         {
-            return Build<T>(p, Version.LUCENE_30, null);
+            return Build<T>(p, LuceneVersion.LUCENE_30, null);
         }
 
-        internal static IFieldMapper<T> Build<T>(PropertyInfo p, Version version, Analyzer externalAnalyzer)
+        internal static IFieldMapper<T> Build<T>(PropertyInfo p, LuceneVersion version, Analyzer externalAnalyzer)
         {
             var boost = p.GetCustomAttribute<DocumentBoostAttribute>(true);
 
@@ -69,7 +69,7 @@ namespace Lucene.Net.Linq.Mapping
             return false;
         }
 
-        private static ReflectionFieldMapper<T> BuildPrimitive<T>(PropertyInfo p, Type type, FieldAttribute metadata, Version version, Analyzer externalAnalyzer)
+        private static ReflectionFieldMapper<T> BuildPrimitive<T>(PropertyInfo p, Type type, FieldAttribute metadata, LuceneVersion version, Analyzer externalAnalyzer)
         {
             var fieldName = (metadata != null ? metadata.Field : null) ?? p.Name;
             var converter = GetConverter(p, type, metadata);
@@ -85,7 +85,7 @@ namespace Lucene.Net.Linq.Mapping
             return new ReflectionFieldMapper<T>(p, store, index, termVectorMode, converter, fieldName, defaultParserOperator, caseSensitive, analyzer, boost, nativeSort);
         }
 
-        internal static Analyzer BuildAnalyzer(FieldAttribute metadata, TypeConverter converter, Version version)
+        internal static Analyzer BuildAnalyzer(FieldAttribute metadata, TypeConverter converter, LuceneVersion version)
         {
             if (metadata != null && metadata.Analyzer != null)
             {
@@ -141,14 +141,14 @@ namespace Lucene.Net.Linq.Mapping
             return converter;
         }
 
-        internal static Analyzer CreateAnalyzer(Type analyzer, Version version)
+        internal static Analyzer CreateAnalyzer(Type analyzer, LuceneVersion version)
         {
             if (!typeof(Analyzer).IsAssignableFrom(analyzer))
             {
                 throw new InvalidOperationException("The type " + analyzer + " does not inherit from " + typeof(Analyzer));
             }
 
-            var versionCtr = analyzer.GetConstructor(new[] { typeof(Version) });
+            var versionCtr = analyzer.GetConstructor(new[] { typeof(LuceneVersion) });
 
             if (versionCtr != null)
             {
@@ -162,7 +162,7 @@ namespace Lucene.Net.Linq.Mapping
                 return (Analyzer)defaultCtr.Invoke(null);
             }
 
-            throw new InvalidOperationException("The analyzer type " + analyzer + " must have a public default constructor or public constructor that accepts " + typeof(Version));
+            throw new InvalidOperationException("The analyzer type " + analyzer + " must have a public default constructor or public constructor that accepts " + typeof(LuceneVersion));
         }
     }
 }

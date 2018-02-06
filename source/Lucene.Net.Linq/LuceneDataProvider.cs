@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
@@ -11,7 +11,7 @@ using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Remotion.Linq.Parsing.Structure;
-using Version = Lucene.Net.Util.Version;
+using Lucene.Net.Util;
 
 namespace Lucene.Net.Linq
 {
@@ -43,7 +43,7 @@ namespace Lucene.Net.Linq
         private readonly Directory directory;
         private readonly Analyzer externalAnalyzer;
         private readonly PerFieldAnalyzer perFieldAnalyzer;
-        private readonly Version version;
+        private readonly LuceneVersion version;
         private readonly object sync = new object();
         private readonly IQueryParser queryParser;
         private readonly Context context;
@@ -54,7 +54,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance with a client-provided <see cref="Analyzer"/>
         /// </summary>
-        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, Version version)
+        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, LuceneVersion version)
             : this(directory, externalAnalyzer, version, null, new object())
         {
         }
@@ -62,7 +62,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance.
         /// </summary>
-        public LuceneDataProvider(Directory directory, Version version)
+        public LuceneDataProvider(Directory directory, LuceneVersion version)
             : this(directory, null, version, null, new object())
         {
         }
@@ -70,7 +70,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance with an externally provided <see cref="IndexWriter"/>
         /// </summary>
-        public LuceneDataProvider(Directory directory, Version version, IndexWriter externalWriter)
+        public LuceneDataProvider(Directory directory, LuceneVersion version, IndexWriter externalWriter)
             : this(directory, null, version, new IndexWriterAdapter(externalWriter), new object())
         {
         }
@@ -78,7 +78,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance with a client-provided <see cref="Analyzer"/> and <see cref="IndexWriter"/>
         /// </summary>
-        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, Version version, IndexWriter indexWriter)
+        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, LuceneVersion version, IndexWriter indexWriter)
             : this(directory, externalAnalyzer, version, new IndexWriterAdapter(indexWriter), new object())
         {
         }
@@ -88,7 +88,7 @@ namespace Lucene.Net.Linq
         /// If the supplied IndexWriter will be written to outside of this instance of LuceneDataProvider,
         /// the <paramref name="transactionLock"/> will be used to coordinate writes.
         /// </summary>
-        public LuceneDataProvider(Directory directory, Version version, IIndexWriter externalWriter, object transactionLock)
+        public LuceneDataProvider(Directory directory, LuceneVersion version, IIndexWriter externalWriter, object transactionLock)
             : this(directory, null, version, externalWriter, transactionLock)
         {
         }
@@ -98,7 +98,7 @@ namespace Lucene.Net.Linq
         /// If the supplied IndexWriter will be written to outside of this instance of LuceneDataProvider,
         /// the <paramref name="transactionLock"/> will be used to coordinate writes.
         /// </summary>
-        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, Version version, IIndexWriter externalWriter, object transactionLock)
+        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, LuceneVersion version, IIndexWriter externalWriter, object transactionLock)
         {
             this.directory = directory;
             this.externalAnalyzer = externalAnalyzer;
@@ -156,7 +156,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Gets the index format version provided by constructor.
         /// </summary>
-        public Version LuceneVersion
+        public LuceneVersion LuceneVersion
         {
             get { return version; }
         }

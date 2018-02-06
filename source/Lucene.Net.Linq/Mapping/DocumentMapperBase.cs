@@ -1,13 +1,16 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Analysis;
 using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
-using Version = Lucene.Net.Util.Version;
+using Lucene.Net.Util;
+
 
 namespace Lucene.Net.Linq.Mapping
 {
@@ -15,7 +18,7 @@ namespace Lucene.Net.Linq.Mapping
     {
         protected readonly Analyzer externalAnalyzer;
         protected PerFieldAnalyzer analyzer;
-        protected readonly Version version;
+        protected readonly LuceneVersion version;
         protected readonly IDictionary<string, IFieldMapper<T>> fieldMap = new Dictionary<string, IFieldMapper<T>>(StringComparer.Ordinal);
         protected readonly List<IFieldMapper<T>> keyFields = new List<IFieldMapper<T>>();
 
@@ -24,7 +27,7 @@ namespace Lucene.Net.Linq.Mapping
         /// using metadata on public properties on the type <typeparamref name="T"/>.
         /// </summary>
         /// <param name="version">Version compatibility for analyzers and indexers.</param>
-        protected DocumentMapperBase(Version version)
+        protected DocumentMapperBase(LuceneVersion version)
             : this(version, null)
         {
         }
@@ -35,7 +38,7 @@ namespace Lucene.Net.Linq.Mapping
         /// </summary>
         /// <param name="version">Version compatibility for analyzers and indexers.</param>
         /// <param name="externalAnalyzer"></param>
-        protected DocumentMapperBase(Version version, Analyzer externalAnalyzer)
+        protected DocumentMapperBase(LuceneVersion version, Analyzer externalAnalyzer)
         {
             this.version = version;
             this.externalAnalyzer = externalAnalyzer;

@@ -1,8 +1,9 @@
 using System;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
+using Lucene.Net.Queries;
 using Lucene.Net.Search;
-using Lucene.Net.Search.Function;
+//using Lucene.Net.Search.Function;
 
 namespace Lucene.Net.Linq.Search.Function
 {

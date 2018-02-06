@@ -1,0 +1,123 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27309.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucene.Net.Linq", "source\Lucene.Net.Linq\Lucene.Net.Linq.csproj", "{77AD18CC-93A3-4BC9-9F31-2C16D873F088}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucene.Net.Linq.Tests", "source\Lucene.Net.Linq.Tests\Lucene.Net.Linq.Tests.csproj", "{40D157FA-178B-4906-9179-E5D623F5BA03}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{91DBBF52-CD3F-4737-91DC-CDB7564C32B9}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
+		README.markdown = README.markdown
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{95CA6EE1-3FC1-466E-821F-E48BE7DCCA6E}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ciao", "Ciao", "{78E2D7F3-D76C-42CD-BB5F-F978916D8F03}"
+	ProjectSection(SolutionItems) = preProject
+		Ciao.proj = Ciao.proj
+		Ciao.props = Ciao.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucene.Net", "..\lucenenet.master\src\Lucene.Net\Lucene.Net.csproj", "{30EEACC0-6FCE-4895-852A-EDBED4CD0C04}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucene.Net.Analysis.Common", "..\lucenenet.master\src\Lucene.Net.Analysis.Common\Lucene.Net.Analysis.Common.csproj", "{54AFC5DF-4624-4F96-9D39-F18DCD33AFDE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucene.Net.Expressions", "..\lucenenet.master\src\Lucene.Net.Expressions\Lucene.Net.Expressions.csproj", "{7B0E9B2B-688F-4C79-8208-AA851ECAAF09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucene.Net.Queries", "..\lucenenet.master\src\Lucene.Net.Queries\Lucene.Net.Queries.csproj", "{4A5350D9-44C3-4BCE-87F0-A910E50114F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucene.Net.QueryParser", "..\lucenenet.master\src\Lucene.Net.QueryParser\Lucene.Net.QueryParser.csproj", "{605A5F01-535E-4C60-A71C-C08D9D66BCD3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucene.Net.Misc", "..\lucenenet.master\src\Lucene.Net.Misc\Lucene.Net.Misc.csproj", "{CD40D5A0-AA19-4E91-B7C0-C9CDA5C325D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lucene.Net.Sandbox", "..\lucenenet.master\src\Lucene.Net.Sandbox\Lucene.Net.Sandbox.csproj", "{3FEC718D-58B7-49B6-AC6B-023DB30AB44E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77AD18CC-93A3-4BC9-9F31-2C16D873F088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77AD18CC-93A3-4BC9-9F31-2C16D873F088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77AD18CC-93A3-4BC9-9F31-2C16D873F088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77AD18CC-93A3-4BC9-9F31-2C16D873F088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40D157FA-178B-4906-9179-E5D623F5BA03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40D157FA-178B-4906-9179-E5D623F5BA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40D157FA-178B-4906-9179-E5D623F5BA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30EEACC0-6FCE-4895-852A-EDBED4CD0C04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30EEACC0-6FCE-4895-852A-EDBED4CD0C04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30EEACC0-6FCE-4895-852A-EDBED4CD0C04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30EEACC0-6FCE-4895-852A-EDBED4CD0C04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54AFC5DF-4624-4F96-9D39-F18DCD33AFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54AFC5DF-4624-4F96-9D39-F18DCD33AFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54AFC5DF-4624-4F96-9D39-F18DCD33AFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54AFC5DF-4624-4F96-9D39-F18DCD33AFDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B0E9B2B-688F-4C79-8208-AA851ECAAF09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B0E9B2B-688F-4C79-8208-AA851ECAAF09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B0E9B2B-688F-4C79-8208-AA851ECAAF09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B0E9B2B-688F-4C79-8208-AA851ECAAF09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A5350D9-44C3-4BCE-87F0-A910E50114F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A5350D9-44C3-4BCE-87F0-A910E50114F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A5350D9-44C3-4BCE-87F0-A910E50114F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A5350D9-44C3-4BCE-87F0-A910E50114F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{605A5F01-535E-4C60-A71C-C08D9D66BCD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{605A5F01-535E-4C60-A71C-C08D9D66BCD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{605A5F01-535E-4C60-A71C-C08D9D66BCD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{605A5F01-535E-4C60-A71C-C08D9D66BCD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD40D5A0-AA19-4E91-B7C0-C9CDA5C325D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD40D5A0-AA19-4E91-B7C0-C9CDA5C325D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD40D5A0-AA19-4E91-B7C0-C9CDA5C325D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD40D5A0-AA19-4E91-B7C0-C9CDA5C325D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FEC718D-58B7-49B6-AC6B-023DB30AB44E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FEC718D-58B7-49B6-AC6B-023DB30AB44E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FEC718D-58B7-49B6-AC6B-023DB30AB44E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FEC718D-58B7-49B6-AC6B-023DB30AB44E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {947006C1-7BB4-4DEB-9AE5-8EA88D984A22}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Lucene.Net.Linq\Lucene.Net.Linq.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.TextStylePolicy = $2
+		$2.NoTabsAfterNonTabs = True
+		$2.EolMarker = Windows
+		$2.inheritsSet = VisualStudio
+		$2.inheritsScope = text/plain
+		$2.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $3
+		$3.IndentSwitchBody = True
+		$3.AnonymousMethodBraceStyle = NextLine
+		$3.PropertyBraceStyle = NextLine
+		$3.PropertyGetBraceStyle = NextLine
+		$3.PropertySetBraceStyle = NextLine
+		$3.EventBraceStyle = NextLine
+		$3.EventAddBraceStyle = NextLine
+		$3.EventRemoveBraceStyle = NextLine
+		$3.StatementBraceStyle = NextLine
+		$3.ArrayInitializerBraceStyle = NextLine
+		$3.BeforeMethodDeclarationParentheses = False
+		$3.BeforeMethodCallParentheses = False
+		$3.BeforeConstructorDeclarationParentheses = False
+		$3.BeforeDelegateDeclarationParentheses = False
+		$3.NewParentheses = False
+		$3.inheritsSet = Mono
+		$3.inheritsScope = text/x-csharp
+		$3.scope = text/x-csharp
+	EndGlobalSection
+EndGlobal

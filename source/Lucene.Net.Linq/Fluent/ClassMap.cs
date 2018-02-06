@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Search;
-using Version = Lucene.Net.Util.Version;
+using Lucene.Net.Util;
+
 
 namespace Lucene.Net.Linq.Fluent
 {
@@ -16,13 +17,13 @@ namespace Lucene.Net.Linq.Fluent
     /// <typeparam name="T">The type of class being mapped.</typeparam>
     public class ClassMap<T>
     {
-        private readonly Version version;
+        private readonly LuceneVersion version;
         private readonly ISet<PropertyMap<T>> properties = new HashSet<PropertyMap<T>>(new PartComparer<T>());
         private readonly IDictionary<string, string> documentKeys = new Dictionary<string, string>(StringComparer.Ordinal);
         private ReflectionScoreMapper<T> scoreMapper;
         private ReflectionDocumentBoostMapper<T> docBoostMapper;
 
-        public ClassMap(Version version)
+        public ClassMap(LuceneVersion version)
         {
             this.version = version;
         }
