@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Linq.Search;
 using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
-using Version = Lucene.Net.Util.Version;
+using Lucene.Net.Util;
 
 namespace Lucene.Net.Linq
 {
     public class FieldMappingQueryParser<T> : QueryParser
     {
-        private readonly Version matchVersion;
+        private readonly LuceneVersion matchVersion;
         private readonly IDocumentMapper<T> mapper;
         private readonly string initialDefaultField;
         private static readonly string DefaultField = typeof(FieldMappingQueryParser<T>).FullName + ".DEFAULT_FIELD";
 
         [Obsolete("Use constructor with default search field")]
-        public FieldMappingQueryParser(Version matchVersion, IDocumentMapper<T> mapper)
+        public FieldMappingQueryParser(LuceneVersion matchVersion, IDocumentMapper<T> mapper)
             : base(matchVersion, DefaultField, mapper.Analyzer)
         {
             this.initialDefaultField = DefaultField;
@@ -24,7 +25,7 @@ namespace Lucene.Net.Linq
             this.mapper = mapper;
         }
 
-        public FieldMappingQueryParser(Version matchVersion, string defaultSearchField, IDocumentMapper<T> mapper)
+        public FieldMappingQueryParser(LuceneVersion matchVersion, string defaultSearchField, IDocumentMapper<T> mapper)
             : base(matchVersion, defaultSearchField, mapper.Analyzer)
         {
             this.initialDefaultField = defaultSearchField;
@@ -41,7 +42,7 @@ namespace Lucene.Net.Linq
         [Obsolete("Set the default search field in the constructor instead")]
         public string DefaultSearchProperty { get; set; }
 
-        public Version MatchVersion
+        public LuceneVersion MatchVersion
         {
             get { return matchVersion; }
         }

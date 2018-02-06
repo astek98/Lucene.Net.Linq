@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +9,7 @@ using Lucene.Net.Linq.Search;
 using Lucene.Net.Linq.Util;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
-using Version = Lucene.Net.Util.Version;
+using Lucene.Net.Util;
 using System.Linq.Expressions;
 using System.Collections.Concurrent;
 
@@ -217,7 +217,7 @@ namespace Lucene.Net.Linq.Mapping
                 return query;
             }
 
-            var queryParser = new QueryParser(Version.LUCENE_30, FieldName, analyzer)
+            var queryParser = new QueryParser(LuceneVersion.LUCENE_30, FieldName, analyzer)
             {
                 AllowLeadingWildcard = true,
                 LowercaseExpandedTerms = !CaseSensitive,
@@ -242,7 +242,7 @@ namespace Lucene.Net.Linq.Mapping
             var terms = Analyzer.GetTerms(FieldName, pattern).ToList();
 
             if (terms.Count > 1) return false;
-            
+
             var termValue = Unescape(terms.Single());
             var term = new Term(FieldName, termValue);
 
@@ -290,7 +290,7 @@ namespace Lucene.Net.Linq.Mapping
             object cache;
             if (internalCache.TryGetValue (cacheKey, out cache))
                 return (Func<T, object>)cache;
-            
+
             // create method
             var name = propertyInfo.Name;
             var source = Expression.Parameter(typeof(T));
@@ -312,7 +312,7 @@ namespace Lucene.Net.Linq.Mapping
             object cache;
             if (internalCache.TryGetValue (cacheKey, out cache))
                 return (Action<T, object>)cache;
-            
+
             // create method
             var name = propertyInfo.Name;
             var propType = propertyInfo.PropertyType;

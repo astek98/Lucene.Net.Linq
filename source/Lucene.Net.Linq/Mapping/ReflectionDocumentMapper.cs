@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Lucene.Net.Analysis;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Util;
-using Version = Lucene.Net.Util.Version;
+using Lucene.Net.Util;
 
 namespace Lucene.Net.Linq.Mapping
 {
@@ -25,7 +25,7 @@ namespace Lucene.Net.Linq.Mapping
         /// using metadata on public properties on the type <typeparamref name="T"/>.
         /// </summary>
         /// <param name="version">Version compatibility for analyzers and indexers.</param>
-        public ReflectionDocumentMapper(Version version)
+        public ReflectionDocumentMapper(LuceneVersion version)
             : this(version, null)
         {
         }
@@ -36,12 +36,12 @@ namespace Lucene.Net.Linq.Mapping
         /// </summary>
         /// <param name="version">Version compatibility for analyzers and indexers.</param>
         /// <param name="externalAnalyzer"></param>
-        public ReflectionDocumentMapper(Version version, Analyzer externalAnalyzer)
+        public ReflectionDocumentMapper(LuceneVersion version, Analyzer externalAnalyzer)
             : this(version, externalAnalyzer, typeof(T))
         {
         }
 
-        private ReflectionDocumentMapper(Version version, Analyzer externalAnalyzer, Type type)
+        private ReflectionDocumentMapper(LuceneVersion version, Analyzer externalAnalyzer, Type type)
             : base(version, externalAnalyzer)
         {
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);

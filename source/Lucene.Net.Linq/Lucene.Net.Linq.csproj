@@ -11,6 +11,8 @@
     <RootNamespace>Lucene.Net.Linq</RootNamespace>
     <AssemblyName>Lucene.Net.Linq</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Lucene.Net.Linq.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Lucene.Net.Linq.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -48,9 +52,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Lucene.Net">
-      <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
-    </Reference>
     <Reference Include="Remotion.Linq">
       <HintPath>..\..\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
     </Reference>
@@ -188,6 +189,32 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\lucenenet.master\src\Lucene.Net.Analysis.Common\Lucene.Net.Analysis.Common.csproj">
+      <Project>{54afc5df-4624-4f96-9d39-f18dcd33afde}</Project>
+      <Name>Lucene.Net.Analysis.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\lucenenet.master\src\Lucene.Net.Expressions\Lucene.Net.Expressions.csproj">
+      <Project>{7b0e9b2b-688f-4c79-8208-aa851ecaaf09}</Project>
+      <Name>Lucene.Net.Expressions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\lucenenet.master\src\Lucene.Net.Misc\Lucene.Net.Misc.csproj">
+      <Project>{cd40d5a0-aa19-4e91-b7c0-c9cda5c325d6}</Project>
+      <Name>Lucene.Net.Misc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\lucenenet.master\src\Lucene.Net.Queries\Lucene.Net.Queries.csproj">
+      <Project>{4a5350d9-44c3-4bce-87f0-a910e50114f9}</Project>
+      <Name>Lucene.Net.Queries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\lucenenet.master\src\Lucene.Net.QueryParser\Lucene.Net.QueryParser.csproj">
+      <Project>{605a5f01-535e-4c60-a71c-c08d9d66bcd3}</Project>
+      <Name>Lucene.Net.QueryParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\lucenenet.master\src\Lucene.Net\Lucene.Net.csproj">
+      <Project>{30eeacc0-6fce-4895-852a-edbed4cd0c04}</Project>
+      <Name>Lucene.Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
