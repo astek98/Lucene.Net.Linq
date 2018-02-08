@@ -21,7 +21,7 @@ namespace Lucene.Net.Linq
         {
             try
             {
-                //
+                throw new NotImplementedException();
 //                perFieldAnalyzerWrapper.AddAnalyzer(((MemberExpression)fieldName.Body).Member.Name, analyzer);
             }
             catch (Exception ex)

@@ -140,6 +140,7 @@ namespace Lucene.Net.Linq.Mapping
         {
             if (EnableScoreTracking)
             {
+                throw  new NotImplementedException();
 //                context.Searcher.SetDefaultFieldSortScoring(true, false);
             }
         }
