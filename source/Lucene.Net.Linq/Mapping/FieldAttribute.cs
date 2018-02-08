@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Lucene.Net.Analysis;
 using Lucene.Net.Documents;
 using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
 using Attribute = System.Attribute;
@@ -130,12 +131,12 @@ namespace Lucene.Net.Linq.Mapping
         /// <value>
         /// The default parser operator.
         /// </value>
-        public QueryParser.Operator DefaultParserOperator { get; set; }
+        public Operator DefaultParserOperator { get; set; }
 
         /// <summary>
         /// When set, supplies a custom analyzer for this field. The analyzer type
         /// must have either a parameterless public constructor, or a public constructor
-        /// that accepts a <see cref="Net.Util.Version"/> argument.
+        /// that accepts a <see cref="Version"/> argument.
         /// 
         /// When an external Analyzer is provided on <see cref="LuceneDataProvider"/>
         /// methods it will override this setting.

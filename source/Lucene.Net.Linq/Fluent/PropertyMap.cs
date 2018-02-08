@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Reflection;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Analysis;
 using Lucene.Net.Linq.Mapping;
-using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
+
 
 namespace Lucene.Net.Linq.Fluent
 {
@@ -26,7 +28,7 @@ namespace Lucene.Net.Linq.Fluent
         protected StoreMode store = StoreMode.Yes;
         protected float boost = 1.0f;
         protected bool caseSensitive;
-        protected QueryParser.Operator defaultParseOperator = QueryParser.OR_OPERATOR;
+        protected Operator defaultParseOperator = QueryParserBase.OR_OPERATOR;
         protected bool nativeSort;
 
         internal PropertyMap(ClassMap<T> classMap, PropertyInfo propInfo, bool isKey = false)
@@ -194,7 +196,7 @@ namespace Lucene.Net.Linq.Fluent
         /// </summary>
         public PropertyMap<T> ParseWithAndOperatorByDefault()
         {
-            defaultParseOperator = QueryParser.Operator.AND;
+            defaultParseOperator = Operator.AND;
             return this;
         }
 
@@ -206,7 +208,7 @@ namespace Lucene.Net.Linq.Fluent
         /// </summary>
         public PropertyMap<T> ParseWithOrOperatorByDefault()
         {
-            defaultParseOperator = QueryParser.Operator.OR;
+            defaultParseOperator = Operator.OR;
             return this;
         }
 
@@ -263,7 +265,7 @@ namespace Lucene.Net.Linq.Fluent
         private TypeConverter ResolveConverter()
         {
             if (converter != null) return converter;
-            
+
             var fakeAttr = new FieldAttribute(indexMode) { CaseSensitive = caseSensitive };
 
             return FieldMappingInfoBuilder.GetConverter(propInfo, PropertyType, fakeAttr);
@@ -275,9 +277,9 @@ namespace Lucene.Net.Linq.Fluent
 
             var fakeAttr = new FieldAttribute(indexMode) { CaseSensitive = caseSensitive };
 
-            var flag = FieldMappingInfoBuilder.GetCaseSensitivity(fakeAttr, converter);
+            var isCaseSensitivity = FieldMappingInfoBuilder.GetCaseSensitivity(fakeAttr, converter);
 
-            return flag ? new KeywordAnalyzer() : new CaseInsensitiveKeywordAnalyzer();
+            return isCaseSensitivity ? (Analyzer) new KeywordAnalyzer() : new CaseInsensitiveKeywordAnalyzer();
         }
 
         private void SetDefaults(PropertyInfo propInfo, PropertyMap<T> copy)

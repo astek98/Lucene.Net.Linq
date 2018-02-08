@@ -15,11 +15,11 @@ namespace Lucene.Net.Linq.Mapping
     {
         private readonly IDictionary<T, ITermFreqVector[]> map = new Dictionary<T, ITermFreqVector[]>();
 
-        public TermFreqVectorDocumentMapper(Version version) : base(version)
+        public TermFreqVectorDocumentMapper(LuceneVersion version) : base(version)
         {
         }
 
-        public TermFreqVectorDocumentMapper(Version version, Analyzer externalAnalyzer)
+        public TermFreqVectorDocumentMapper(LuceneVersion version, Analyzer externalAnalyzer)
             : base(version, externalAnalyzer)
         {
         }
@@ -28,12 +28,21 @@ namespace Lucene.Net.Linq.Mapping
         {
             base.ToObject(source, context, target);
 
-            map[target] = context.Searcher.IndexReader.GetTermFreqVectors(context.CurrentScoreDoc.Doc);
+            map[target] = GetTermFreqVectors(context.CurrentScoreDoc.Doc);
+        }
+
+        private ITermFreqVector[] GetTermFreqVectors(int doc)
+        {
+            throw new System.NotImplementedException();
         }
 
         public ITermFreqVector[] this[T index]
         {
             get { return map[index]; }
         }
+    }
+
+    public interface ITermFreqVector
+    {
     }
 }

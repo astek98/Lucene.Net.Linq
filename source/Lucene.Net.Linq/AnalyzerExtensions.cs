@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Miscellaneous;
 
 namespace Lucene.Net.Linq
 {
@@ -20,7 +21,8 @@ namespace Lucene.Net.Linq
         {
             try
             {
-                perFieldAnalyzerWrapper.AddAnalyzer(((MemberExpression)fieldName.Body).Member.Name, analyzer);
+                //
+//                perFieldAnalyzerWrapper.AddAnalyzer(((MemberExpression)fieldName.Body).Member.Name, analyzer);
             }
             catch (Exception ex)
             {

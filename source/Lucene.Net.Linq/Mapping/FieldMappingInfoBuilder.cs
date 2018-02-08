@@ -3,10 +3,12 @@ using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Linq.Analysis;
 using Lucene.Net.Linq.Converters;
 using Lucene.Net.Linq.Util;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Util;
 using DateTimeConverter = Lucene.Net.Linq.Converters.DateTimeConverter;
 
@@ -23,22 +25,22 @@ namespace Lucene.Net.Linq.Mapping
 
         internal static IFieldMapper<T> Build<T>(PropertyInfo p, LuceneVersion version, Analyzer externalAnalyzer)
         {
-            var boost = p.GetCustomAttribute<DocumentBoostAttribute>(true);
+            var boost = MemberInfoUtils.GetCustomAttribute<DocumentBoostAttribute>(p, true);
 
             if (boost != null)
             {
                 return new ReflectionDocumentBoostMapper<T>(p);
             }
 
-            var score = p.GetCustomAttribute<QueryScoreAttribute>(true);
+            var score = MemberInfoUtils.GetCustomAttribute<QueryScoreAttribute>(p, true);
 
             if (score != null)
             {
                 return new ReflectionScoreMapper<T>(p);
             }
 
-            var metadata = p.GetCustomAttribute<FieldAttribute>(true);
-            var numericFieldAttribute = p.GetCustomAttribute<NumericFieldAttribute>(true);
+            var metadata = MemberInfoUtils.GetCustomAttribute<FieldAttribute>(p, true);
+            var numericFieldAttribute = MemberInfoUtils.GetCustomAttribute<NumericFieldAttribute>(p, true);
             Type type;
 
             var isCollection = IsCollection(p.PropertyType, out type);
@@ -78,7 +80,7 @@ namespace Lucene.Net.Linq.Mapping
             var index = metadata != null ? metadata.IndexMode : IndexMode.Analyzed;
             var termVectorMode = metadata != null ? metadata.TermVector : TermVectorMode.No;
             var boost = metadata != null ? metadata.Boost : 1.0f;
-            var defaultParserOperator = metadata != null ? metadata.DefaultParserOperator : QueryParsers.QueryParser.Operator.OR;
+            var defaultParserOperator = metadata != null ? metadata.DefaultParserOperator : Operator.OR;
             var caseSensitive = GetCaseSensitivity(metadata, converter);
             var analyzer = externalAnalyzer ?? BuildAnalyzer(metadata, converter, version);
             var nativeSort = metadata != null && metadata.NativeSort;
@@ -93,12 +95,9 @@ namespace Lucene.Net.Linq.Mapping
                 return CreateAnalyzer(metadata.Analyzer, version);
             }
 
-            if (GetCaseSensitivity(metadata, converter))
-            {
-                return new KeywordAnalyzer();
-            }
+            var isCaseSensitivity = GetCaseSensitivity(metadata, converter);
 
-            return new CaseInsensitiveKeywordAnalyzer();
+            return isCaseSensitivity ? (Analyzer) new KeywordAnalyzer() : new CaseInsensitiveKeywordAnalyzer();
         }
 
         internal static bool GetCaseSensitivity(FieldAttribute metadata, TypeConverter converter)

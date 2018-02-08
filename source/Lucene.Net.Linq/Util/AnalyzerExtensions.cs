@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Tokenattributes;
+using Lucene.Net.Analysis.TokenAttributes;
 
 namespace Lucene.Net.Linq.Util
 {
@@ -19,21 +19,21 @@ namespace Lucene.Net.Linq.Util
 
             try
             {
-                s = analyzer.ReusableTokenStream(fieldName, new StringReader(pattern));
+                s = analyzer.GetTokenStream(fieldName, new StringReader(pattern));
             }
             catch (IOException)
             {
-                s = analyzer.TokenStream(fieldName, new StringReader(pattern));
+                s = analyzer.GetTokenStream(fieldName, new StringReader(pattern));
             }
 
             try
             {
                 while (s.IncrementToken())
                 {
-                    if (!s.HasAttribute<ITermAttribute>()) continue;
+                    if (!s.HasAttribute<ITermToBytesRefAttribute>()) continue;
 
-                    var attr = s.GetAttribute<ITermAttribute>();
-                    yield return attr.Term;
+                    var attr = s.GetAttribute<ITermToBytesRefAttribute>();
+                    yield return attr.ToString();
                 }
             }
             finally

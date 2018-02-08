@@ -1,5 +1,7 @@
-﻿using System.IO;
+using System.IO;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
+using Lucene.Net.Util;
 
 namespace Lucene.Net.Linq.Analysis
 {
@@ -7,11 +9,11 @@ namespace Lucene.Net.Linq.Analysis
     /// Decorates <see cref="KeywordAnalyzer"/> to convert the token stream
     /// to lowercase, allowing queries with different case-spelling to match.
     /// </summary>
-    public class CaseInsensitiveKeywordAnalyzer : KeywordAnalyzer
+    public class CaseInsensitiveKeywordAnalyzer : Analyzer
     {
-        public override TokenStream TokenStream(string fieldName, TextReader reader)
+        protected override TokenStreamComponents CreateComponents(string fieldName, TextReader reader)
         {
-            return new LowerCaseFilter(base.TokenStream(fieldName, reader));
+            return new TokenStreamComponents(new LowerCaseTokenizer(LuceneVersion.LUCENE_48, reader));
         }
     }
 }
