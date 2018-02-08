@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Lucene.Net.Analysis;
 using Lucene.Net.Documents;
@@ -18,12 +18,14 @@ namespace Lucene.Net.Linq.Mapping
 
         public object GetFieldValue(Document document)
         {
-            return document.Boost;
+            throw new NotImplementedException("Removed from LCNET");
+//            return document.Boost;
         }
 
         public void CopyToDocument(T source, Document target)
         {
-            target.Boost = (float)GetPropertyValue(source);
+            throw new NotImplementedException("Removed from LCNET");
+//            target.Boost = (float)GetPropertyValue(source);
         }
 
         public void CopyFromDocument(Document source, IQueryExecutionContext context, T target)

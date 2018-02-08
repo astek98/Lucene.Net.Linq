@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Search;
@@ -38,15 +38,15 @@ namespace Lucene.Net.Linq.Util
 
             if (lowerBound is int)
             {
-                return NumericRangeQuery.NewIntRange(fieldName, (int)lowerBound, (int)upperBound, minInclusive, maxInclusive);
+                return NumericRangeQuery.NewInt32Range(fieldName, (int)lowerBound, (int)upperBound, minInclusive, maxInclusive);
             }
             if (lowerBound is long)
             {
-                return NumericRangeQuery.NewLongRange(fieldName, (long)lowerBound, (long)upperBound, minInclusive, maxInclusive);
+                return NumericRangeQuery.NewInt64Range(fieldName, (long)lowerBound, (long)upperBound, minInclusive, maxInclusive);
             }
             if (lowerBound is float)
             {
-                return NumericRangeQuery.NewFloatRange(fieldName, (float)lowerBound, (float)upperBound, minInclusive, maxInclusive);
+                return NumericRangeQuery.NewSingleRange(fieldName, (float)lowerBound, (float)upperBound, minInclusive, maxInclusive);
             }
             if (lowerBound is double)
             {
@@ -76,29 +76,36 @@ namespace Lucene.Net.Linq.Util
             return value;
         }
 
-        internal static string ToPrefixCoded(this ValueType value)
+        internal static BytesRef ToPrefixCoded(this ValueType value)
         {
+            BytesRef result = new BytesRef();
             if (value is int)
             {
-                return NumericUtils.IntToPrefixCoded((int)value);
+                NumericUtils.Int32ToPrefixCoded((int)value, 0, result);
+                return result;
             }
             if (value is long)
             {
-                return NumericUtils.LongToPrefixCoded((long)value);
+                NumericUtils.Int64ToPrefixCoded((long)value, 0, result);
+                return result;
             }
             if (value is double)
             {
-                return NumericUtils.DoubleToPrefixCoded((double)value);
+                var sl = NumericUtils.DoubleToSortableInt64((double)value);
+                NumericUtils.Int64ToPrefixCoded(sl, 0, result);
+                return result;
             }
             if (value is float)
             {
-                return NumericUtils.FloatToPrefixCoded((float)value);
+                var si = NumericUtils.SingleToSortableInt32((float)value);
+                NumericUtils.Int64ToPrefixCoded(si, 0, result);
+                return result;
             }
 
             throw new NotSupportedException("ValueType " + value.GetType() + " not supported.");
         }
 
-        internal static NumericField SetValue(this NumericField field, ValueType value)
+        internal static NumericDocValuesField SetValue(this NumericDocValuesField field, ValueType value)
         {
             if (value.GetType().IsEnum)
             {
@@ -107,19 +114,23 @@ namespace Lucene.Net.Linq.Util
 
             if (value is int)
             {
-                return field.SetIntValue((int) value);
+                field.SetInt32Value((int) value);
+                return field;
             }
             if (value is long)
             {
-                return field.SetLongValue((long)value);
+                field.SetInt64Value((long)value);
+                return field;
             }
             if (value is double)
             {
-                return field.SetDoubleValue((double)value);
+                field.SetDoubleValue((double) value);
+                return field;
             }
             if (value is float)
             {
-                return field.SetFloatValue((float)value);
+                field.SetSingleValue((float) value);
+                return field;
             }
 
             throw new ArgumentException("Unable to store ValueType " + value.GetType() + " as NumericField.", "value");
@@ -131,14 +142,14 @@ namespace Lucene.Net.Linq.Util
         /// not allow alternative indexing methods to be used. This prevents boost from being applied
         /// when a document is being indexed.
         /// </summary>
-        internal static NumericField ForceDisableOmitNorms(this NumericField field)
+        internal static NumericDocValuesField ForceDisableOmitNorms(this NumericDocValuesField field)
         {
             const string fieldName = "internalOmitNorms";
-            var fieldInfo = typeof(AbstractField).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+            var fieldInfo = typeof(Field).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
 
             if (fieldInfo == null)
             {
-                throw new InvalidOperationException(string.Format("Type {0} does not have a non-public field named {1}.", typeof(AbstractField), fieldName));
+                throw new InvalidOperationException(string.Format("Type {0} does not have a non-public field named {1}.", typeof(Field), fieldName));
             }
 
             fieldInfo.SetValue(field, false);
@@ -149,26 +160,26 @@ namespace Lucene.Net.Linq.Util
 
     internal static class TypeExtensions
     {
-        internal static int ToSortField(this Type valueType)
+        internal static SortFieldType ToSortField(this Type valueType)
         {
             if (valueType == typeof(long))
             {
-                return SortField.LONG;
+                return SortFieldType.INT64;
             }
             if (valueType == typeof(int))
             {
-                return SortField.INT;
+                return SortFieldType.INT32;
             }
             if (valueType == typeof(double))
             {
-                return SortField.DOUBLE;
+                return SortFieldType.DOUBLE;
             }
             if (valueType == typeof(float))
             {
-                return SortField.FLOAT;
+                return SortFieldType.SINGLE;
             }
 
-            return SortField.CUSTOM;
+            return SortFieldType.CUSTOM;
         }
 
         internal static Type GetUnderlyingType(this Type type)

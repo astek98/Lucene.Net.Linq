@@ -1,9 +1,9 @@
-﻿using Lucene.Net.Index;
+using Lucene.Net.Index;
 using Lucene.Net.Search;
 
 namespace Lucene.Net.Linq.Search
 {
-    public abstract class FieldComparator<T> : FieldComparator
+    public abstract class FieldComparator<T> : FieldComparer
     {
         protected string field;
         protected T[] values;
@@ -24,11 +24,6 @@ namespace Lucene.Net.Linq.Search
         public override void SetBottom(int bottom)
         {
             this.bottom = values[bottom];
-        }
-
-        public override void SetNextReader(IndexReader reader, int docBase)
-        {
-            currentReaderValues = GetCurrentReaderValues(reader, docBase);
         }
 
         protected abstract T[] GetCurrentReaderValues(IndexReader reader, int docBase);

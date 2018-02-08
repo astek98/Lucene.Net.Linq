@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Linq.Search;
@@ -43,7 +44,7 @@ namespace Lucene.Net.Linq.Mapping
             return new SortField(FieldName, targetType.ToSortField(), reverse);
         }
 
-        protected internal override object ConvertFieldValue(IFieldable field)
+        protected internal override object ConvertFieldValue(IIndexableField field)
         {
             var value = base.ConvertFieldValue(field);
 
@@ -65,7 +66,7 @@ namespace Lucene.Net.Linq.Mapping
 
             value = ConvertToSupportedValueType(value);
 
-            var numericField = new NumericField(fieldName, precisionStep, FieldStore, true);
+            var numericField = new NumericDocValuesField(fieldName, (long)value);
             numericField.SetValue((ValueType)value);
 
             SetBoostIfNotDefault(numericField);
@@ -73,11 +74,11 @@ namespace Lucene.Net.Linq.Mapping
             target.Add(numericField);
         }
 
-        private void SetBoostIfNotDefault(NumericField numericField)
+        private void SetBoostIfNotDefault(NumericDocValuesField numericField)
         {
             const float threshold = 0.002f;
             var diff = Math.Abs(Boost - 1.0f);
-            
+
             if (diff < threshold) return;
 
             numericField.ForceDisableOmitNorms();
@@ -88,7 +89,7 @@ namespace Lucene.Net.Linq.Mapping
         {
             value = ConvertToSupportedValueType(value);
 
-            return ((ValueType) value).ToPrefixCoded();
+            return ((ValueType) value).ToPrefixCoded().Utf8ToString();
         }
 
         public override string EscapeSpecialCharacters(string value)
@@ -103,7 +104,7 @@ namespace Lucene.Net.Linq.Mapping
             {
                 return base.CreateQuery(pattern);
             }
-            
+
             return new TermQuery(new Term(FieldName, pattern));
         }
 

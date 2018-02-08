@@ -57,7 +57,7 @@ namespace Lucene.Net.Linq
             get { return DefaultSearchProperty; }
         }
 
-        protected override Query GetFieldQuery(string field, string queryText)
+        protected override Query GetFieldQuery(string field, string queryText, bool quoted)
         {
             var mapping = GetMapping(field);
 
@@ -72,13 +72,16 @@ namespace Lucene.Net.Linq
             }
         }
 
-        protected override Query GetRangeQuery(string field, string part1, string part2, bool inclusive)
+        protected override Query GetRangeQuery(string field, string part1, string part2, bool startInclusive, bool endInclusive)
         {
-            var rangeType = inclusive ? RangeType.Inclusive : RangeType.Exclusive;
             var mapping = GetMapping(field);
             try
             {
-                return mapping.CreateRangeQuery(part1, part2, rangeType, rangeType);
+                return mapping.CreateRangeQuery(
+                    part1,
+                    part2,
+                    startInclusive ? RangeType.Inclusive : RangeType.Exclusive,
+                    endInclusive ? RangeType.Inclusive : RangeType.Exclusive);
             }
             catch (Exception ex)
             {

@@ -7,11 +7,11 @@ using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Linq.Search;
 using Lucene.Net.Linq.Util;
-using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
 using System.Linq.Expressions;
 using System.Collections.Concurrent;
+using Lucene.Net.QueryParsers.Classic;
 
 namespace Lucene.Net.Linq.Mapping
 {
@@ -26,7 +26,7 @@ namespace Lucene.Net.Linq.Mapping
         protected readonly TermVectorMode termVector;
         protected readonly TypeConverter converter;
         protected readonly string fieldName;
-        protected readonly QueryParser.Operator defaultParserOperator;
+        protected readonly Operator defaultParserOperator;
         protected readonly bool caseSensitive;
         protected readonly Analyzer analyzer;
         protected readonly float boost;
@@ -40,12 +40,12 @@ namespace Lucene.Net.Linq.Mapping
         }
 
         public ReflectionFieldMapper(PropertyInfo propertyInfo, StoreMode store, IndexMode index, TermVectorMode termVector, TypeConverter converter, string fieldName, bool caseSensitive, Analyzer analyzer, float boost)
-            : this(propertyInfo, store, index, termVector, converter, fieldName, QueryParser.Operator.OR, caseSensitive, analyzer, boost)
+            : this(propertyInfo, store, index, termVector, converter, fieldName, Operator.OR, caseSensitive, analyzer, boost)
         {
 
         }
 
-        public ReflectionFieldMapper(PropertyInfo propertyInfo, StoreMode store, IndexMode index, TermVectorMode termVector, TypeConverter converter, string fieldName, QueryParser.Operator defaultParserOperator, bool caseSensitive, Analyzer analyzer, float boost, bool nativeSort = false)
+        public ReflectionFieldMapper(PropertyInfo propertyInfo, StoreMode store, IndexMode index, TermVectorMode termVector, TypeConverter converter, string fieldName, Operator defaultParserOperator, bool caseSensitive, Analyzer analyzer, float boost, bool nativeSort = false)
         {
             this.propertyInfo = propertyInfo;
             this.propertyGetter = CreatePropertyGetter(propertyInfo);
@@ -143,7 +143,7 @@ namespace Lucene.Net.Linq.Mapping
             }
         }
 
-        public virtual QueryParser.Operator DefaultParseOperator
+        public virtual Operator DefaultParseOperator
         {
             get
             {
@@ -173,7 +173,7 @@ namespace Lucene.Net.Linq.Mapping
 
         public object GetFieldValue(Document document)
         {
-            var field = document.GetFieldable(fieldName);
+            var field = document.GetField(fieldName);
 
             if (field == null)
                 return null;
@@ -337,17 +337,17 @@ namespace Lucene.Net.Linq.Mapping
 
             var lowerBoundStr = lowerBound == null ? null : EvaluateExpressionToStringAndAnalyze(lowerBound);
             var upperBoundStr = upperBound == null ? null : EvaluateExpressionToStringAndAnalyze(upperBound);
-            return new TermRangeQuery(FieldName, lowerBoundStr, upperBoundStr, minInclusive, maxInclusive);
+            return TermRangeQuery.NewStringRange(FieldName, lowerBoundStr, upperBoundStr, minInclusive, maxInclusive);
         }
 
         public virtual SortField CreateSortField(bool reverse)
         {
             if (Converter == null || NativeSort)
-                return new SortField(FieldName, SortField.STRING, reverse);
+                return new SortField(FieldName, SortFieldType.STRING, reverse);
 
             var propertyType = propertyInfo.PropertyType;
 
-            FieldComparatorSource source;
+            FieldComparerSource source;
 
             if (typeof(IComparable).IsAssignableFrom(propertyType))
             {
@@ -371,9 +371,9 @@ namespace Lucene.Net.Linq.Mapping
             return analyzer.Analyze(FieldName, ConvertToQueryExpression(value));
         }
 
-        protected internal virtual object ConvertFieldValue(IFieldable field)
+        protected internal virtual object ConvertFieldValue(IIndexableField field)
         {
-            var fieldValue = (object)field.StringValue;
+            var fieldValue = (object)field.GetStringValue();
 
             if (converter != null)
             {

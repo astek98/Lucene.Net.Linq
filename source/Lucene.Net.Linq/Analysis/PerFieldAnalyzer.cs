@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Miscellaneous;
 
 namespace Lucene.Net.Linq.Analysis
 {
@@ -10,24 +11,24 @@ namespace Lucene.Net.Linq.Analysis
     /// prevents collisions of different analyzers being
     /// added for the same field.
     /// </summary>
-    public class PerFieldAnalyzer : Analyzer
+    public class PerFieldAnalyzer : AnalyzerWrapper
     {
         private readonly Analyzer defaultAnalyzer;
         private readonly IDictionary<string, Analyzer> analyzerMap = new Dictionary<string, Analyzer>(StringComparer.Ordinal);
-        
+
         /// <summary> Constructs with default analyzer.
-        /// 
+        ///
         /// </summary>
         /// <param name="defaultAnalyzer">Any fields not specifically
         /// defined to use a different analyzer will use the one provided here.
         /// </param>
-        public PerFieldAnalyzer(Analyzer defaultAnalyzer)
+        public PerFieldAnalyzer(Analyzer defaultAnalyzer) : base(null)
         {
             this.defaultAnalyzer = defaultAnalyzer;
         }
 
         /// <summary> Defines an analyzer to use for the specified field.
-        /// 
+        ///
         /// </summary>
         /// <param name="fieldName">field name requiring a non-default analyzer
         /// </param>
@@ -46,41 +47,18 @@ namespace Lucene.Net.Linq.Analysis
             }
         }
 
-        public override TokenStream TokenStream(string fieldName, TextReader reader)
+        protected override Analyzer GetWrappedAnalyzer(string fieldName)
         {
-            var analyzer = GetAnalyzerForField(fieldName);
-
-            return analyzer.TokenStream(fieldName, reader);
-        }
-
-        public override TokenStream ReusableTokenStream(string fieldName, TextReader reader)
-        {
-#pragma warning disable 612,618
-            if (overridesTokenStreamMethod)
-#pragma warning restore 612,618
-            {
-                // LUCENE-1678: force fallback to tokenStream() if we
-                // have been subclassed and that subclass overrides
-                // tokenStream but not reusableTokenStream
-                return TokenStream(fieldName, reader);
-            }
-
-            var analyzer = GetAnalyzerForField(fieldName);
-
-            return analyzer.ReusableTokenStream(fieldName, reader);
+            return GetAnalyzerForField(fieldName) ?? defaultAnalyzer;
         }
 
         /// <summary>Return the positionIncrementGap from the analyzer assigned to fieldName </summary>
-        public override int GetPositionIncrementGap(string fieldName)
-        {
-            return GetAnalyzerForField(fieldName).GetPositionIncrementGap(fieldName);
-        }
 
         public override string ToString()
         {
             return "PerFieldAnalyzerWrapper(" + analyzerMap + ", default=" + defaultAnalyzer + ")";
         }
-        
+
         /// <summary>
         /// Copy field analyzers from another instance into this instance.
         /// </summary>
@@ -93,10 +71,6 @@ namespace Lucene.Net.Linq.Analysis
             }
         }
 
-        public virtual Analyzer this[string fieldName]
-        {
-            get { return GetAnalyzerForField(fieldName); }
-        }
 
         protected virtual Analyzer GetAnalyzerForField(string fieldName)
         {
