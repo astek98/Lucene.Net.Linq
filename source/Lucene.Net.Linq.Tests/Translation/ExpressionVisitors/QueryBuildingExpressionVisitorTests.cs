@@ -1,17 +1,19 @@
 using System;
 using System.Linq.Expressions;
+using Lucene.Net.Analysis;
 using Lucene.Net.Linq.Clauses.Expressions;
 using Lucene.Net.Linq.Search;
-using Lucene.Net.Linq.Translation.ExpressionVisitors;
+using Lucene.Net.Linq.Tests.Integration;
+using Lucene.Net.Linq.Translation.TreeVisitors;
 using Lucene.Net.Search;
 using NUnit.Framework;
 
-namespace Lucene.Net.Linq.Tests.Translation.ExpressionVisitors
+namespace Lucene.Net.Linq.Tests.Translation.TreeVisitors
 {
     [TestFixture]
-    public class QueryBuildingExpressionVisitorTests
+    public class QueryBuildingExpressionTreeVisitorTests
     {
-        private QueryBuildingExpressionVisitor builder;
+        private QueryBuildingExpressionTreeVisitor builder;
 
         private static readonly Expression MemberAccessId =
             new LuceneQueryFieldExpression(typeof (int), "Id");
@@ -22,7 +24,7 @@ namespace Lucene.Net.Linq.Tests.Translation.ExpressionVisitors
         public void SetUp()
         {
             fieldMappingInfoProvider = new FieldMappingInfoProviderStub();
-            builder = new QueryBuildingExpressionVisitor(fieldMappingInfoProvider);
+            builder = new QueryBuildingExpressionTreeVisitor(fieldMappingInfoProvider);
         }
 
         [Test]
@@ -39,7 +41,7 @@ namespace Lucene.Net.Linq.Tests.Translation.ExpressionVisitors
                 MemberAccessId,
                 Expression.Constant(1));
 
-            TestDelegate call = () => builder.Visit(expression);
+            TestDelegate call = () => builder.VisitExpression(expression);
 
             Assert.That(call, Throws.Exception.InstanceOf<NotSupportedException>());
         }
@@ -53,7 +55,7 @@ namespace Lucene.Net.Linq.Tests.Translation.ExpressionVisitors
                 Occur.MUST,
                 QueryType.GreaterThan);
 
-            builder.Visit(expression);
+            builder.VisitExpression(expression);
 
             Assert.That(builder.Query.ToString(), Is.EqualTo("+Name:{SampleName TO *]"));
         }
@@ -67,7 +69,7 @@ namespace Lucene.Net.Linq.Tests.Translation.ExpressionVisitors
                 Occur.MUST,
                 QueryType.GreaterThanOrEqual);
 
-            builder.Visit(expression);
+            builder.VisitExpression(expression);
 
             Assert.That(builder.Query.ToString(), Is.EqualTo("+Name:[SampleName TO *]"));
         }
@@ -81,7 +83,7 @@ namespace Lucene.Net.Linq.Tests.Translation.ExpressionVisitors
                 Occur.MUST,
                 QueryType.LessThan);
 
-            builder.Visit(expression);
+            builder.VisitExpression(expression);
 
             Assert.That(builder.Query.ToString(), Is.EqualTo("+Name:[* TO SampleName}"));
         }
@@ -95,7 +97,7 @@ namespace Lucene.Net.Linq.Tests.Translation.ExpressionVisitors
                 Occur.MUST,
                 QueryType.LessThanOrEqual);
 
-            builder.Visit(expression);
+            builder.VisitExpression(expression);
 
             Assert.That(builder.Query.ToString(), Is.EqualTo("+Name:[* TO SampleName]"));
         }

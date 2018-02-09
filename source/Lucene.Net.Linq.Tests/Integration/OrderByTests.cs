@@ -1,7 +1,10 @@
-﻿using System;
 using System.Linq;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
+using Lucene.Net.Analysis.Miscellaneous;
+using Lucene.Net.Util;
 using NUnit.Framework;
+using Version = System.Version;
 
 namespace Lucene.Net.Linq.Tests.Integration
 {
@@ -16,11 +19,11 @@ namespace Lucene.Net.Linq.Tests.Integration
             AddDocument(new SampleDocument { Name = "b", Scalar = 2, Flag = true, Version = new Version(3, 0, 0) });
         }
 
-        protected override Analyzer GetAnalyzer(Net.Util.Version version)
+        protected override Analyzer GetAnalyzer(LuceneVersion version)
         {
             var a = new PerFieldAnalyzerWrapper(base.GetAnalyzer(version));
-            a.AddAnalyzer("Version", new KeywordAnalyzer());
-            a.AddAnalyzer("Flag", new KeywordAnalyzer());
+//            a.AddAnalyzer("Version", new KeywordAnalyzer());
+//            a.AddAnalyzer("Flag", new KeywordAnalyzer());
             return a;
         }
 

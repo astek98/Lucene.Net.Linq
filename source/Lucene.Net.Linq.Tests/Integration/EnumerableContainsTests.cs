@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Lucene.Net.Linq.Fluent;
 using Lucene.Net.Util;
@@ -21,7 +21,7 @@ namespace Lucene.Net.Linq.Tests.Integration
         [SetUp]
         public void SetUp()
         {
-            tourMap = new ClassMap<Tour>(Version.LUCENE_30);
+            tourMap = new ClassMap<Tour>(LuceneVersion.LUCENE_48);
             tourMap.Property(p => p.AccommodationAges).Stored().NotAnalyzed();
             tourMap.Property(p => p.TotalPriceMin).Stored().NotAnalyzed();
             tourMap.Property(p => p.TotalPriceMax).Stored().NotAnalyzed();

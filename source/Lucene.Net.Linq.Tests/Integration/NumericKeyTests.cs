@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
@@ -24,7 +24,7 @@ namespace Lucene.Net.Linq.Tests.Integration
         public void SetUp()
         {
             directory = new RAMDirectory();
-            provider = new LuceneDataProvider(directory, Version.LUCENE_30);
+            provider = new LuceneDataProvider(directory, LuceneVersion.LUCENE_48);
         }
 
         [Test]

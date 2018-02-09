@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using Lucene.Net.Analysis;
 using Lucene.Net.Index;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Store;
+using Lucene.Net.Util;
 using NUnit.Framework;
-using Version = Lucene.Net.Util.Version;
+using Directory = Lucene.Net.Store.Directory;
 
 namespace Lucene.Net.Linq.Tests.Integration
 {
@@ -15,20 +16,21 @@ namespace Lucene.Net.Linq.Tests.Integration
         protected LuceneDataProvider provider;
         protected Directory directory;
         protected IndexWriter writer;
-        protected static readonly Version version = Version.LUCENE_29;
+        protected static readonly LuceneVersion version = LuceneVersion.LUCENE_48;
 
         [SetUp]
         public virtual void InitializeLucene()
         {
             directory = new RAMDirectory();
-            writer = new IndexWriter(directory, GetAnalyzer(version), IndexWriter.MaxFieldLength.UNLIMITED);
+            var config = new IndexWriterConfig(LuceneVersion.LUCENE_48, GetAnalyzer(version));
+            writer = new IndexWriter(directory, config);
 
             provider = new LuceneDataProvider(directory, writer.Analyzer, version, writer);
         }
 
-        protected virtual Analyzer GetAnalyzer(Version version)
+        protected virtual Analyzer GetAnalyzer(LuceneVersion version)
         {
-            return new PorterStemAnalyzer(version);
+            return new PorterStemAnalyzer();
         }
 
         [DocumentKey(FieldName = "FixedKey", Value = "SampleDocument")]

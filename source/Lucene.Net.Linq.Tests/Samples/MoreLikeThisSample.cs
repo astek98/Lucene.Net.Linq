@@ -6,11 +6,11 @@ using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Linq;
 using Lucene.Net.Linq.Mapping;
+using Lucene.Net.Queries.Mlt;
 using Lucene.Net.Search;
-using Lucene.Net.Search.Similar;
 using Lucene.Net.Store;
+using Lucene.Net.Util;
 using NUnit.Framework;
-using Version = Lucene.Net.Util.Version;
 
 namespace Sample
 {
@@ -27,7 +27,7 @@ namespace Sample
         [Test]
         public void Demo()
         {
-            var provider = new LuceneDataProvider(new RAMDirectory(), Version.LUCENE_30);
+            var provider = new LuceneDataProvider(new RAMDirectory(), LuceneVersion.LUCENE_48);
 
             using (var session = provider.OpenSession<Entity>())
             {
@@ -36,7 +36,7 @@ namespace Sample
                 session.Add(new Entity { Text = "completely unrelated"});
             }
 
-            var mapper = new MoreLikeThisDocumentMapper<Entity>(Version.LUCENE_30);
+            var mapper = new MoreLikeThisDocumentMapper<Entity>(LuceneVersion.LUCENE_48);
 
             var query = provider.AsQueryable(mapper);
 
@@ -53,7 +53,7 @@ namespace Sample
             private readonly IDictionary<T, Query> queries = new Dictionary<T, Query>();
             private MoreLikeThis mlt;
 
-            public MoreLikeThisDocumentMapper(Version version) : base(version)
+            public MoreLikeThisDocumentMapper(LuceneVersion version) : base(version)
             {
             }
 
@@ -62,15 +62,15 @@ namespace Sample
                 mlt = new MoreLikeThis(context.Searcher.IndexReader);
                 mlt.MinDocFreq = 2;
                 mlt.MinTermFreq = 1;
-                mlt.Analyzer = new StandardAnalyzer(Version.LUCENE_30);
-                mlt.SetFieldNames(new[] {"Text"});
+                mlt.Analyzer = new StandardAnalyzer( LuceneVersion.LUCENE_48);
+//                mlt.SetFieldNames(new[] {"Text"});
                 base.PrepareSearchSettings(context);
             }
 
             public override void ToObject(Document source, IQueryExecutionContext context, T target)
             {
                 base.ToObject(source, context, target);
-                Console.WriteLine(context.Searcher.DocFreq(new Term("Text", "words")));
+//                Console.WriteLine(context.Searcher.DocFreq(new Term("Text", "words")));
                 queries[target] = mlt.Like(context.CurrentScoreDoc.Doc);
             }
 

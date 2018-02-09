@@ -3,8 +3,10 @@ using System.ComponentModel;
 using Lucene.Net.Index;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Linq.Search;
-using Lucene.Net.QueryParsers;
+using Lucene.Net.Linq.Util;
 using Lucene.Net.Search;
+using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
 
 namespace Lucene.Net.Linq.Tests
 {
@@ -39,9 +41,9 @@ namespace Lucene.Net.Linq.Tests
 
         public Query CreateRangeQuery(object lowerBound, object upperBound, RangeType lowerRange, RangeType upperRange)
         {
-            return new TermRangeQuery(FieldName,
-                lowerBound != null ? lowerBound.ToString() : null,
-                upperBound != null ? upperBound.ToString() : null,
+            return TermRangeQuery.NewStringRange(FieldName,
+                lowerBound?.ToString(),
+                upperBound?.ToString(),
                 lowerRange == RangeType.Inclusive,
                 upperRange == RangeType.Inclusive);
         }

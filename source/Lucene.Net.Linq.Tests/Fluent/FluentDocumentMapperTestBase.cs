@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Lucene.Net.Linq.Fluent;
 using Lucene.Net.Linq.Mapping;
+using Lucene.Net.Util;
 using NUnit.Framework;
-using Version = Lucene.Net.Util.Version;
 
 namespace Lucene.Net.Linq.Tests.Fluent
 {
@@ -23,7 +23,7 @@ namespace Lucene.Net.Linq.Tests.Fluent
 
             public IEnumerable<int> Numbers { get; set; }
 
-            public IEnumerable<Uri> Urls { get; set; } 
+            public IEnumerable<Uri> Urls { get; set; }
 
             public float Boost { get; set; }
         }
@@ -31,7 +31,7 @@ namespace Lucene.Net.Linq.Tests.Fluent
         public class SampleMap : ClassMap<Sample>
         {
             public SampleMap()
-                :base(Version.LUCENE_30)
+                :base(LuceneVersion.LUCENE_48)
             {
             }
         }

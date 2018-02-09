@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using Lucene.Net.Linq.Fluent;
 using Lucene.Net.Linq.Tests.Integration;
-using Version = Lucene.Net.Util.Version;
+using Lucene.Net.Util;
+
 
 namespace Sample
 {
@@ -9,13 +10,13 @@ namespace Sample
     {
         public void CreateMapping()
         {
-            var map = new ClassMap<Package>(Version.LUCENE_30);
+            var map = new ClassMap<Package>(LuceneVersion.LUCENE_48);
 
             map.Key(p => p.Id);
             map.Key(p => p.Version).ConvertWith(new VersionConverter());
 
             map.Property(p => p.Description)
-                .AnalyzeWith(new PorterStemAnalyzer(Version.LUCENE_30))
+                .AnalyzeWith(new PorterStemAnalyzer())
                 .WithTermVector.PositionsAndOffsets();
 
             map.Property(p => p.DownloadCount)

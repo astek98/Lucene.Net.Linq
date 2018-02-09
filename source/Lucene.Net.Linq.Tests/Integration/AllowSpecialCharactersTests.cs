@@ -1,6 +1,9 @@
 using System.Linq;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
+using Lucene.Net.Analysis.Miscellaneous;
 using Lucene.Net.Linq.Analysis;
+using Lucene.Net.Util;
 using NUnit.Framework;
 
 namespace Lucene.Net.Linq.Tests.Integration
@@ -8,11 +11,11 @@ namespace Lucene.Net.Linq.Tests.Integration
     [TestFixture]
     public class AllowSpecialCharactersTests : IntegrationTestBase
     {
-        protected override Analyzer GetAnalyzer(Net.Util.Version version)
+        protected override Analyzer GetAnalyzer(LuceneVersion version)
         {
             var analyzer = new PerFieldAnalyzerWrapper(base.GetAnalyzer(version));
-            analyzer.AddAnalyzer("Path", new CaseInsensitiveKeywordAnalyzer());
-            analyzer.AddAnalyzer("Key", new KeywordAnalyzer());
+//            analyzer.AddAnalyzer("Path", new CaseInsensitiveKeywordAnalyzer());
+//            analyzer.AddAnalyzer("Key", new KeywordAnalyzer());
             return analyzer;
         }
 

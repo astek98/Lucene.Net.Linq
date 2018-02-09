@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Linq.Search;
 using Lucene.Net.Linq.Tests.Integration;
-using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
 using NUnit.Framework;
+using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
+using Lucene.Net.Util;
 
 namespace Lucene.Net.Linq.Tests.Mapping
 {
@@ -18,7 +21,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
         [Test]
         public void SpecifyAnalyzer()
         {
-            var mapper = CreateMapper("Text", analyzer: new PorterStemAnalyzer(Net.Util.Version.LUCENE_30));
+            var mapper = CreateMapper("Text", analyzer: new PorterStemAnalyzer());
 
             var query = mapper.CreateQuery("values");
 
@@ -28,7 +31,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
         [Test]
         public void ParseMultipleTerms()
         {
-            var mapper = CreateMapper("Text", analyzer: new StandardAnalyzer(Net.Util.Version.LUCENE_30));
+            var mapper = CreateMapper("Text", analyzer: new StandardAnalyzer(LuceneVersion.LUCENE_48));
 
             var query = mapper.CreateQuery("x y z");
             Assert.That(query.ToString(), Is.EqualTo("Text:x Text:y Text:z"));
@@ -46,7 +49,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
         [Test]
         public void ParseMultipleTermsWithDefaultOperatorAnd()
         {
-            var mapper = CreateMapper("Text", analyzer: new StandardAnalyzer(Net.Util.Version.LUCENE_30), defaultParseOperaor: QueryParser.Operator.AND);
+            var mapper = CreateMapper("Text", analyzer: new StandardAnalyzer(LuceneVersion.LUCENE_48), defaultParseOperaor: Operator.AND);
 
             var query = mapper.CreateQuery("x y z");
             Assert.That(query.ToString(), Is.EqualTo("+Text:x +Text:y +Text:z"));
@@ -97,7 +100,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
         [Test]
         public void AnalyzesQueryValue()
         {
-            var mapper = CreateMapper("Text", analyzer: new StandardAnalyzer(Net.Util.Version.LUCENE_30));
+            var mapper = CreateMapper("Text", analyzer: new StandardAnalyzer(LuceneVersion.LUCENE_48));
 
             var result = mapper.CreateRangeQuery("SomeValue", null, RangeType.Inclusive, RangeType.Inclusive);
 
@@ -113,7 +116,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
             var sort = mapper.CreateSortField(reverse: false);
 
             Assert.That(sort.Field, Is.EqualTo(mapper.FieldName));
-            Assert.That(sort.ComparatorSource, Is.InstanceOf<NonGenericConvertableFieldComparatorSource>());
+            Assert.That(sort.ComparerSource, Is.InstanceOf<NonGenericConvertableFieldComparatorSource>());
 
         }
 
@@ -125,7 +128,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
             var sort = mapper.CreateSortField(reverse: false);
 
             Assert.That(sort.Field, Is.EqualTo(mapper.FieldName));
-            Assert.That(sort.Type, Is.EqualTo(SortField.STRING));
+            Assert.That(sort.Type, Is.EqualTo(SortField.FIELD_DOC));
 
         }
 
@@ -145,7 +148,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
             Assert.That(call, Throws.Nothing);
         }
 
-        private ReflectionFieldMapper<ReflectionFieldMapperTests> CreateMapper(string propertyName, TypeConverter converter = null, Analyzer analyzer = null, QueryParser.Operator defaultParseOperaor = QueryParser.Operator.OR, bool caseSensitive = false, bool nativeSort = false)
+        private ReflectionFieldMapper<ReflectionFieldMapperTests> CreateMapper(string propertyName, TypeConverter converter = null, Analyzer analyzer = null, Operator defaultParseOperaor = Operator.OR, bool caseSensitive = false, bool nativeSort = false)
         {
             return new ReflectionFieldMapper<ReflectionFieldMapperTests>(
                 typeof(ReflectionFieldMapperTests).GetProperty(propertyName),

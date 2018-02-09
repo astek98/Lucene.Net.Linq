@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using Lucene.Net.Store;
+using Lucene.Net.Util;
 using NUnit.Framework;
 
 namespace Lucene.Net.Linq.Tests.Integration
@@ -21,7 +22,7 @@ namespace Lucene.Net.Linq.Tests.Integration
         public override void InitializeLucene()
         {
             directory = new RAMDirectory();
-            provider = new LuceneDataProvider(directory, Net.Util.Version.LUCENE_30);
+            provider = new LuceneDataProvider(directory, LuceneVersion.LUCENE_48);
 
             AddDocument(new Sample {DateTime = time1});
             AddDocument(new Sample {DateTime = time2});

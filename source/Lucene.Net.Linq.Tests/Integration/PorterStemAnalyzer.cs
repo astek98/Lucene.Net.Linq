@@ -1,19 +1,20 @@
-﻿using Lucene.Net.Analysis;
+using System;
+using System.IO;
+using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Util;
 
 namespace Lucene.Net.Linq.Tests.Integration
 {
-    public class PorterStemAnalyzer : StandardAnalyzer
+    public class PorterStemAnalyzer : Analyzer
     {
-        public PorterStemAnalyzer(Version version)
-            : base(version)
+        public PorterStemAnalyzer()
         {
         }
 
-        public override TokenStream TokenStream(string fieldName, System.IO.TextReader reader)
+        protected override TokenStreamComponents CreateComponents(string fieldName, TextReader reader)
         {
-            return new PorterStemFilter(base.TokenStream(fieldName, reader));
+            throw new NotImplementedException();
         }
     }
 }

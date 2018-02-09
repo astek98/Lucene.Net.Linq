@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Lucene.Net.Analysis;
 using Lucene.Net.Linq.Analysis;
+using Lucene.Net.Util;
 using NUnit.Framework;
 
 namespace Lucene.Net.Linq.Tests.Integration
@@ -9,7 +10,7 @@ namespace Lucene.Net.Linq.Tests.Integration
     [TestFixture]
     public class SessionTests : IntegrationTestBase
     {
-        protected override Analyzer GetAnalyzer(Net.Util.Version version)
+        protected override Analyzer GetAnalyzer(LuceneVersion version)
         {
             return new CaseInsensitiveKeywordAnalyzer();
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -7,8 +7,8 @@ using Lucene.Net.Linq;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Linq.Tests.Integration;
 using Lucene.Net.Store;
+using Lucene.Net.Util;
 using NUnit.Framework;
-using Version = Lucene.Net.Util.Version;
 
 namespace Sample
 {
@@ -58,7 +58,7 @@ namespace Sample
         {
             var directory = new RAMDirectory();
 
-            var provider = new LuceneDataProvider(directory, Version.LUCENE_30);
+            var provider = new LuceneDataProvider(directory, LuceneVersion.LUCENE_48);
 
             // add some documents
             using (var session = provider.OpenSession<Article>())

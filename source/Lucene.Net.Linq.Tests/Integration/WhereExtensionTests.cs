@@ -1,9 +1,12 @@
 using System;
 using System.Linq;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
+using Lucene.Net.Util;
 using NUnit.Framework;
 
 namespace Lucene.Net.Linq.Tests.Integration
@@ -13,7 +16,7 @@ namespace Lucene.Net.Linq.Tests.Integration
     {
         IQueryable<SampleDocument> documents;
 
-        protected override Analyzer GetAnalyzer(Net.Util.Version version)
+        protected override Analyzer GetAnalyzer(LuceneVersion version)
         {
             return new KeywordAnalyzer();
         }

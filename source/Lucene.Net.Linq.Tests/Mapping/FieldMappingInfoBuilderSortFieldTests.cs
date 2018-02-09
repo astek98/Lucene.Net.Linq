@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Mapping;
@@ -33,7 +34,7 @@ namespace Lucene.Net.Linq.Tests.Mapping
         {
             var result = CreateMapper(versionPropInfo).CreateSortField(reverse: false);
 
-            Assert.That(result.Type, Is.EqualTo(SortField.CUSTOM));
+            Assert.That(result.Type, Is.EqualTo(SortFieldType.CUSTOM));
         }
 
         [Test]
@@ -41,13 +42,13 @@ namespace Lucene.Net.Linq.Tests.Mapping
         {
             var result = CreateMapper(nativeVersionPropInfo).CreateSortField(reverse: false);
 
-            Assert.That(result.Type, Is.EqualTo(SortField.STRING));
+            Assert.That(result.Type, Is.EqualTo(SortFieldType.STRING));
         }
-
+        
         private IFieldMapper<FieldMappingInfoBuilderSortFieldTests> CreateMapper(PropertyInfo propertyInfo)
         {
             return FieldMappingInfoBuilder.Build<FieldMappingInfoBuilderSortFieldTests>(propertyInfo);
         }
-
+        
     }
 }
