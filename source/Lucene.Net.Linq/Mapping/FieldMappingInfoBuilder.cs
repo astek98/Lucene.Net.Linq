@@ -25,22 +25,22 @@ namespace Lucene.Net.Linq.Mapping
 
         internal static IFieldMapper<T> Build<T>(PropertyInfo p, LuceneVersion version, Analyzer externalAnalyzer)
         {
-            var boost = p.GetCustomAttribute<DocumentBoostAttribute>(true);
+            var boost = MemberInfoUtils.GetCustomAttribute<DocumentBoostAttribute>(p, true);
 
             if (boost != null)
             {
                 return new ReflectionDocumentBoostMapper<T>(p);
             }
 
-            var score = p.GetCustomAttribute<QueryScoreAttribute>(true);
+            var score = MemberInfoUtils.GetCustomAttribute<QueryScoreAttribute>(p, true);
 
             if (score != null)
             {
                 return new ReflectionScoreMapper<T>(p);
             }
 
-            var metadata = p.GetCustomAttribute<FieldAttribute>(true);
-            var numericFieldAttribute = p.GetCustomAttribute<NumericFieldAttribute>(true);
+            var metadata = MemberInfoUtils.GetCustomAttribute<FieldAttribute>(p, true);
+            var numericFieldAttribute = MemberInfoUtils.GetCustomAttribute<NumericFieldAttribute>(p, true);
             Type type;
 
             var isCollection = IsCollection(p.PropertyType, out type);
