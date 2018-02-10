@@ -138,7 +138,8 @@ namespace Lucene.Net.Linq.Tests
             }
         }
 
-        [Test, Ignore]
+        [Test]
+        [Ignore("Fixed")]
         public void MergesAnalyzersForSessionsOfDifferentTypes()
         {
             var provider = new LuceneDataProvider(new RAMDirectory(), LuceneVersion.LUCENE_48);

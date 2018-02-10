@@ -55,7 +55,7 @@ namespace Lucene.Net.Linq.Mapping
         {
             foreach (var p in props)
             {
-                if (MemberInfoUtils.GetCustomAttribute<IgnoreFieldAttribute>(p, true) != null)
+                if (p.GetCustomAttribute<IgnoreFieldAttribute>(true) != null)
                 {
                     continue;
                 }
@@ -73,13 +73,13 @@ namespace Lucene.Net.Linq.Mapping
         private void BuildKeyFieldMap(Type type, IEnumerable<PropertyInfo> props)
         {
             var keyProps = from p in props
-                           let a = MemberInfoUtils.GetCustomAttribute<BaseFieldAttribute>(p, true)
+                           let a = p.GetCustomAttribute<BaseFieldAttribute>(true)
                            where a != null && a.Key
                            select p;
 
             keyFields.AddRange(keyProps.Select(kp => fieldMap[kp.Name]));
 
-            foreach (var attr in MemberInfoUtils.GetCustomAttributes<DocumentKeyAttribute>(type, true))
+            foreach (var attr in type.GetCustomAttributes<DocumentKeyAttribute>(true))
             {
                 AddKeyField(new DocumentKeyFieldMapper<T>(attr.FieldName, attr.Value));
             }
