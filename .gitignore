@@ -8,3 +8,4 @@ bin
 obj
 build/
 packages/
+/.vs/Lucene.Net.Linq/v15/Server/sqlite3
