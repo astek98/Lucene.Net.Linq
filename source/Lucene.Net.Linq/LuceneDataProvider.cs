@@ -1,17 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Common.Logging;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Linq.Abstractions;
 using Lucene.Net.Linq.Analysis;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Search;
-using Lucene.Net.Store;
+using Lucene.Net.Util;
 using Remotion.Linq.Parsing.Structure;
-using Version = Lucene.Net.Util.Version;
+using Directory = Lucene.Net.Store.Directory;
 
 namespace Lucene.Net.Linq
 {
@@ -43,7 +45,7 @@ namespace Lucene.Net.Linq
         private readonly Directory directory;
         private readonly Analyzer externalAnalyzer;
         private readonly PerFieldAnalyzer perFieldAnalyzer;
-        private readonly Version version;
+        private readonly LuceneVersion version;
         private readonly object sync = new object();
         private readonly IQueryParser queryParser;
         private readonly Context context;
@@ -54,7 +56,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance with a client-provided <see cref="Analyzer"/>
         /// </summary>
-        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, Version version)
+        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, LuceneVersion version)
             : this(directory, externalAnalyzer, version, null, new object())
         {
         }
@@ -62,7 +64,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance.
         /// </summary>
-        public LuceneDataProvider(Directory directory, Version version)
+        public LuceneDataProvider(Directory directory, LuceneVersion version)
             : this(directory, null, version, null, new object())
         {
         }
@@ -70,7 +72,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance with an externally provided <see cref="IndexWriter"/>
         /// </summary>
-        public LuceneDataProvider(Directory directory, Version version, IndexWriter externalWriter)
+        public LuceneDataProvider(Directory directory, LuceneVersion version, IndexWriter externalWriter)
             : this(directory, null, version, new IndexWriterAdapter(externalWriter), new object())
         {
         }
@@ -78,7 +80,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Constructs a new instance with a client-provided <see cref="Analyzer"/> and <see cref="IndexWriter"/>
         /// </summary>
-        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, Version version, IndexWriter indexWriter)
+        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, LuceneVersion version, IndexWriter indexWriter)
             : this(directory, externalAnalyzer, version, new IndexWriterAdapter(indexWriter), new object())
         {
         }
@@ -88,7 +90,7 @@ namespace Lucene.Net.Linq
         /// If the supplied IndexWriter will be written to outside of this instance of LuceneDataProvider,
         /// the <paramref name="transactionLock"/> will be used to coordinate writes.
         /// </summary>
-        public LuceneDataProvider(Directory directory, Version version, IIndexWriter externalWriter, object transactionLock)
+        public LuceneDataProvider(Directory directory, LuceneVersion version, IIndexWriter externalWriter, object transactionLock)
             : this(directory, null, version, externalWriter, transactionLock)
         {
         }
@@ -98,7 +100,7 @@ namespace Lucene.Net.Linq
         /// If the supplied IndexWriter will be written to outside of this instance of LuceneDataProvider,
         /// the <paramref name="transactionLock"/> will be used to coordinate writes.
         /// </summary>
-        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, Version version, IIndexWriter externalWriter, object transactionLock)
+        public LuceneDataProvider(Directory directory, Analyzer externalAnalyzer, LuceneVersion version, IIndexWriter externalWriter, object transactionLock)
         {
             this.directory = directory;
             this.externalAnalyzer = externalAnalyzer;
@@ -122,11 +124,11 @@ namespace Lucene.Net.Linq
         }
 
         /// <summary>
-        /// Create a <see cref="QueryParsers.QueryParser"/> suitable for parsing advanced queries
+        /// Create a <see cref="QueryParsers.Classic.QueryParser"/> suitable for parsing advanced queries
         /// that cannot not expressed as LINQ (e.g. queries submitted by a user).
         ///
-        /// After the instance is returned, options such as <see cref="QueryParsers.QueryParser.AllowLeadingWildcard"/>
-        /// and <see cref="QueryParsers.QueryParser.Field"/> can be customized to the clients needs.
+        /// After the instance is returned, options such as <see cref="QueryParsers.Classic.QueryParser.AllowLeadingWildcard"/>
+        /// and <see cref="Field"/> can be customized to the clients needs.
         /// </summary>
         /// <typeparam name="T">The type of document that queries will be built against.</typeparam>
         public FieldMappingQueryParser<T> CreateQueryParser<T>()
@@ -136,11 +138,11 @@ namespace Lucene.Net.Linq
         }
 
         /// <summary>
-        /// Create a <see cref="QueryParsers.QueryParser"/> suitable for parsing advanced queries
+        /// Create a <see cref="QueryParsers.Classic.QueryParser"/> suitable for parsing advanced queries
         /// that cannot not expressed as LINQ (e.g. queries submitted by a user).
         ///
-        /// After the instance is returned, options such as <see cref="QueryParsers.QueryParser.AllowLeadingWildcard"/>
-        /// and <see cref="QueryParsers.QueryParser.Field"/> can be customized to the clients needs.
+        /// After the instance is returned, options such as <see cref="QueryParsers.Classic.QueryParser.AllowLeadingWildcard"/>
+        /// and <see cref="Field"/> can be customized to the clients needs.
         /// </summary>
         /// <typeparam name="T">The type of document that queries will be built against.</typeparam>
         /// <param name="defaultSearchField">The default field for queries that don't specify which field to search.
@@ -156,7 +158,7 @@ namespace Lucene.Net.Linq
         /// <summary>
         /// Gets the index format version provided by constructor.
         /// </summary>
-        public Version LuceneVersion
+        public LuceneVersion LuceneVersion
         {
             get { return version; }
         }
@@ -425,7 +427,9 @@ namespace Lucene.Net.Linq
             }
         }
 
-        protected virtual IIndexWriter GetIndexWriter(Analyzer analyzer)
+        // TODO-MIG
+        /*  WAS. TODO: MergeFactor and MergePlicy. MaxField Length
+       protected virtual IIndexWriter GetIndexWriter(Analyzer analyzer)
         {
             var indexWriter = new IndexWriter(directory, analyzer, ShouldCreateIndex, DeletionPolicy, MaxFieldLength)
             {
@@ -438,6 +442,20 @@ namespace Lucene.Net.Linq
             }
             return new IndexWriterAdapter(indexWriter);
         }
+ */
+        protected virtual IIndexWriter GetIndexWriter(Analyzer analyzer)
+        {
+            var config = new IndexWriterConfig(LuceneVersion.LUCENE_48, analyzer)
+            {
+                OpenMode = OpenMode.CREATE_OR_APPEND,
+                IndexDeletionPolicy = DeletionPolicy,
+                RAMBufferSizeMB = Settings.RAMBufferSizeMB
+            };
+
+            var indexWriter = new IndexWriter(directory, config);
+
+            return new IndexWriterAdapter(indexWriter);
+        }
 
         protected virtual bool ShouldCreateIndex
         {
@@ -447,7 +465,7 @@ namespace Lucene.Net.Linq
                 {
                     return !directory.ListAll().Any();
                 }
-                catch (NoSuchDirectoryException)
+                catch (DirectoryNotFoundException)
                 {
                     return true;
                 }
@@ -459,10 +477,7 @@ namespace Lucene.Net.Linq
             get { return Settings.DeletionPolicy; }
         }
 
-        protected virtual IndexWriter.MaxFieldLength MaxFieldLength
-        {
-            get { return Settings.MaxFieldLength; }
-        }
+        protected virtual int MaxFieldLength => Settings.MaxFieldLength;
 
         private LuceneQueryable<T> CreateQueryable<T>(ObjectLookup<T> factory, Context context, IDocumentMapper<T> mapper)
         {

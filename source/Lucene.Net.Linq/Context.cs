@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common.Logging;
@@ -130,7 +130,9 @@ namespace Lucene.Net.Linq
 
         protected virtual IndexSearcher CreateSearcher()
         {
-            return new IndexSearcher(IndexReader.Open(directory, readOnly: true));
+            // TODO-MIG
+            return new IndexSearcher(IndexReader.Open(directory));
+//            return new IndexSearcher(IndexReader.Open(directory, readOnly: true));
         }
 
         /// <summary>
@@ -142,7 +144,8 @@ namespace Lucene.Net.Linq
         {
             searcher = null;
             var oldReader = reader;
-            reader = reader.Reopen();
+            // TODO-MIG
+//            reader = reader.Reopen();
             if (ReferenceEquals(reader, oldReader))
             {
                 return false;
@@ -253,7 +256,8 @@ namespace Lucene.Net.Linq
                         }
 
                         var reader = searcher.IndexReader;
-                        searcher.Dispose();
+                        // TODO-MIG
+//                        searcher.Dispose();
                         // NB IndexSearcher.Dispose() does not Dispose externally provided IndexReader:
                         reader.Dispose();
 

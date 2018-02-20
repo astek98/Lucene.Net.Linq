@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Lucene.Net.Index;
 using Lucene.Net.Linq.Fluent;
 using Lucene.Net.Linq.Mapping;
@@ -15,9 +15,9 @@ namespace Lucene.Net.Linq
         {
             EnableMultipleEntities = true;
             DeletionPolicy = new KeepOnlyLastCommitDeletionPolicy();
-            MaxFieldLength = IndexWriter.MaxFieldLength.UNLIMITED;
+            MaxFieldLength = IndexWriterConfig.DEFAULT_MAX_BUFFERED_DOCS;
             MergeFactor = LogMergePolicy.DEFAULT_MERGE_FACTOR;
-            RAMBufferSizeMB = IndexWriter.DEFAULT_RAM_BUFFER_SIZE_MB;
+            RAMBufferSizeMB = IndexWriterConfig.DEFAULT_RAM_BUFFER_SIZE_MB;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Lucene.Net.Linq
         /// Specifies the <see cref="IndexWriter.MaxFieldLength"/> of the <see cref="IndexWriter"/>.
         /// Default: <see cref="IndexWriter.MaxFieldLength.UNLIMITED"/>.
         /// </summary>
-        public IndexWriter.MaxFieldLength MaxFieldLength { get; set; }
+        public int MaxFieldLength { get; set; }
 
         /// <summary>
         /// Specifies the merge factor when using <see cref="LogMergePolicy"/> or subclass.

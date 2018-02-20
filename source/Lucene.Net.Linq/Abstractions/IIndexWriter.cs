@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
@@ -27,7 +27,8 @@ namespace Lucene.Net.Linq.Abstractions
         void Rollback();
 
         /// <see cref="IndexWriter.Optimize()"/>
-        void Optimize();
+        // TODO-MIG
+//        void Optimize();
 
         /// <see cref="IndexWriter.GetReader()"/>
         IndexReader GetReader();
@@ -82,7 +83,8 @@ namespace Lucene.Net.Linq.Abstractions
 
         public void Optimize()
         {
-            target.Optimize();
+            // TODO-MIG
+//            target.Optimize();
         }
 
         public void Rollback()
@@ -93,7 +95,7 @@ namespace Lucene.Net.Linq.Abstractions
 
         public IndexReader GetReader()
         {
-            return target.GetReader();
+            return target.GetReader(false);
         }
 
         public bool IsClosed { get { return closed; } }

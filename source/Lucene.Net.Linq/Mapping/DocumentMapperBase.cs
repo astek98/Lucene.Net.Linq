@@ -1,13 +1,14 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Linq.Analysis;
-using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
-using Version = Lucene.Net.Util.Version;
+using Version = Lucene.Net.Util.LuceneVersion;
 
 namespace Lucene.Net.Linq.Mapping
 {
@@ -137,7 +138,9 @@ namespace Lucene.Net.Linq.Mapping
         {
             if (EnableScoreTracking)
             {
-                context.Searcher.SetDefaultFieldSortScoring(true, false);
+                // TODO-MIG
+                throw new NotImplementedException("Migration to LCNT 4.0.8");
+//                context.Searcher.SetDefaultFieldSortScoring(true, false);
             }
         }
 

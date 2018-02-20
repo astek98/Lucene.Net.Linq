@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -118,7 +118,9 @@ namespace Lucene.Net.Linq
             {
                 var searcher = searcherHandle.Searcher;
                 var skipResults = luceneQueryModel.SkipResults;
-                var maxResults = Math.Min(luceneQueryModel.MaxResults, searcher.MaxDoc - skipResults);
+                // TODO-MIG
+                var maxResults = Math.Min(luceneQueryModel.MaxResults, Int32.MaxValue - skipResults);
+//                var maxResults = Math.Min(luceneQueryModel.MaxResults, searcher.MaxDoc - skipResults);
 
                 var executionContext = new QueryExecutionContext(searcher, luceneQueryModel.Query, luceneQueryModel.Filter);
                 TopFieldDocs hits;
@@ -193,7 +195,9 @@ namespace Lucene.Net.Linq
             {
                 var searcher = searcherHandle.Searcher;
                 var skipResults = luceneQueryModel.SkipResults;
-                var maxResults = Math.Min(luceneQueryModel.MaxResults, searcher.MaxDoc - skipResults);
+                // TODO-MIG
+                var maxResults = Math.Min(luceneQueryModel.MaxResults, Int32.MaxValue - skipResults);
+//                var maxResults = Math.Min(luceneQueryModel.MaxResults, searcher.MaxDoc - skipResults);
                 var query = luceneQueryModel.Query;
 
                 var scoreFunction = luceneQueryModel.GetCustomScoreFunction<TDocument>();
@@ -246,7 +250,7 @@ namespace Lucene.Net.Linq
             luceneQueryModel.RaiseCaptureQueryStatistics(statistics);
         }
 
-        private IEnumerable<T> EnumerateHits<T>(TopDocs hits, QueryExecutionContext executionContext, Searchable searcher, IRetrievedDocumentTracker<TDocument> tracker, ItemHolder itemHolder, int skipResults, Func<TDocument, T> projector)
+        private IEnumerable<T> EnumerateHits<T>(TopDocs hits, QueryExecutionContext executionContext, IndexSearcher searcher, IRetrievedDocumentTracker<TDocument> tracker, ItemHolder itemHolder, int skipResults, Func<TDocument, T> projector)
         {
             for (var i = skipResults; i < hits.ScoreDocs.Length; i++)
             {

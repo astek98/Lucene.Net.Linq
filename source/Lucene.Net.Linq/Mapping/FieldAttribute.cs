@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Lucene.Net.Documents;
-using Lucene.Net.QueryParsers;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
 using Attribute = System.Attribute;
@@ -129,7 +129,7 @@ namespace Lucene.Net.Linq.Mapping
         /// <value>
         /// The default parser operator.
         /// </value>
-        public QueryParser.Operator DefaultParserOperator { get; set; }
+        public Operator DefaultParserOperator { get; set; }
 
         /// <summary>
         /// When set, supplies a custom analyzer for this field. The analyzer type
@@ -149,7 +149,7 @@ namespace Lucene.Net.Linq.Mapping
         /// <summary>
         /// When <c>true</c> and the property implements <see cref="IComparable"/>
         /// and/or <see cref="IComparable{T}"/>, instructs the mapping engine to
-        /// use <see cref="SortField.STRING"/> instead of converting each field
+        /// use <see cref="SortFieldType.STRING"/> instead of converting each field
         /// and using <see cref="IComparable{T}.CompareTo"/>. This is a performance
         /// enhancement in cases where the string representation of a complex type
         /// is alphanumerically sortable.

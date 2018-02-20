@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Linq.Analysis;
 using Lucene.Net.Linq.Converters;
 using Lucene.Net.Linq.Util;
+using Lucene.Net.QueryParsers.Classic;
 using DateTimeConverter = Lucene.Net.Linq.Converters.DateTimeConverter;
-using Version = Lucene.Net.Util.Version;
+using Version = Lucene.Net.Util.LuceneVersion;
 
 namespace Lucene.Net.Linq.Mapping
 {
@@ -77,7 +79,7 @@ namespace Lucene.Net.Linq.Mapping
             var index = metadata != null ? metadata.IndexMode : IndexMode.Analyzed;
             var termVectorMode = metadata != null ? metadata.TermVector : TermVectorMode.No;
             var boost = metadata != null ? metadata.Boost : 1.0f;
-            var defaultParserOperator = metadata != null ? metadata.DefaultParserOperator : QueryParsers.QueryParser.Operator.OR;
+            var defaultParserOperator = metadata != null ? metadata.DefaultParserOperator : Operator.OR;
             var caseSensitive = GetCaseSensitivity(metadata, converter);
             var analyzer = externalAnalyzer ?? BuildAnalyzer(metadata, converter, version);
             var nativeSort = metadata != null && metadata.NativeSort;

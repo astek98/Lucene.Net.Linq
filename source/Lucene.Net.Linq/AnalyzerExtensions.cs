@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Miscellaneous;
+using Lucene.Net.Linq.Analysis;
 
 namespace Lucene.Net.Linq
 {
@@ -16,7 +18,7 @@ namespace Lucene.Net.Linq
         /// <param name="perFieldAnalyzerWrapper"></param>
         /// <param name="fieldName">field name requiring a non-default analyzer as a member expression</param>
         /// <param name="analyzer">non-default analyzer to use for field</param>
-        public static void AddAnalyzer<TDocument>(this PerFieldAnalyzerWrapper perFieldAnalyzerWrapper, Expression<Func<TDocument, object>> fieldName, Analyzer analyzer)
+        public static void AddAnalyzer<TDocument>(this PerFieldAnalyzer perFieldAnalyzerWrapper, Expression<Func<TDocument, object>> fieldName, Analyzer analyzer)
         {
             try
             {

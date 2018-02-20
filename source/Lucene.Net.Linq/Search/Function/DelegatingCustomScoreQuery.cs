@@ -1,8 +1,8 @@
 using System;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
+using Lucene.Net.Queries;
 using Lucene.Net.Search;
-using Lucene.Net.Search.Function;
 
 namespace Lucene.Net.Linq.Search.Function
 {
@@ -18,9 +18,9 @@ namespace Lucene.Net.Linq.Search.Function
             this.scoreFunction = scoreFunction;
         }
 
-        protected override CustomScoreProvider GetCustomScoreProvider(IndexReader reader)
+        protected override CustomScoreProvider GetCustomScoreProvider(AtomicReaderContext context)
         {
-            return new DelegatingScoreProvider(reader, convertFunction, scoreFunction);
+            return new DelegatingScoreProvider(context, convertFunction, scoreFunction);
         }
 
         class DelegatingScoreProvider : CustomScoreProvider
@@ -28,8 +28,8 @@ namespace Lucene.Net.Linq.Search.Function
             private readonly Func<Document, T> convertFunction;
             private readonly Func<T, float> scoreFunction;
 
-            public DelegatingScoreProvider(IndexReader reader, Func<Document, T> convertFunction, Func<T, float> scoreFunction)
-                : base(reader)
+            public DelegatingScoreProvider(AtomicReaderContext context, Func<Document, T> convertFunction, Func<T, float> scoreFunction)
+                : base(context)
             {
                 this.convertFunction = convertFunction;
                 this.scoreFunction = scoreFunction;
@@ -39,7 +39,7 @@ namespace Lucene.Net.Linq.Search.Function
             {
                 var val = base.CustomScore(doc, subQueryScore, valSrcScore);
 
-                return val * scoreFunction(convertFunction(reader.Document(doc)));
+                return val * scoreFunction(convertFunction(m_context.AtomicReader.Document(doc)));
             }
         }
     }

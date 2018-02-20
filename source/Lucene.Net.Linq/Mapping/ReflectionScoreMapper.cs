@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Lucene.Net.Analysis;
 using Lucene.Net.Documents;
@@ -34,7 +34,7 @@ namespace Lucene.Net.Linq.Mapping
             }
         }
 
-        public SortField CreateSortField(bool reverse)
+        public SortField CreateSortFieldType(bool reverse)
         {
             if (reverse)
             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using Lucene.Net.Analysis;
 using Lucene.Net.Documents;
@@ -18,12 +18,16 @@ namespace Lucene.Net.Linq.Mapping
 
         public object GetFieldValue(Document document)
         {
-            return document.Boost;
+            // TODO-MIG
+            throw new NotImplementedException("Migration to LCNT 4.0.8");
+//            return document.Boost;
         }
 
         public void CopyToDocument(T source, Document target)
         {
-            target.Boost = (float)GetPropertyValue(source);
+            // TODO-MIG
+            throw new NotImplementedException("Migration to LCNT 4.0.8");
+            //            target.Boost = (float)GetPropertyValue(source);
         }
 
         public void CopyFromDocument(Document source, IQueryExecutionContext context, T target)
@@ -33,7 +37,7 @@ namespace Lucene.Net.Linq.Mapping
             propertyInfo.SetValue(target, value, null);
         }
 
-        public SortField CreateSortField(bool reverse)
+        public SortField CreateSortFieldType(bool reverse)
         {
             throw new NotSupportedException();
         }
