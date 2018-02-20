@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Lucene.Net.Analysis;
 using Lucene.Net.Index;
@@ -13,13 +14,13 @@ namespace Lucene.Net.Linq.Mapping
     /// </summary>
     public class TermFreqVectorDocumentMapper<T> : ReflectionDocumentMapper<T>
     {
-        private readonly IDictionary<T, ITermFreqVector[]> map = new Dictionary<T, ITermFreqVector[]>();
+        private readonly IDictionary<T, Term[]> map = new Dictionary<T, Term[]>();
 
-        public TermFreqVectorDocumentMapper(Version version) : base(version)
+        public TermFreqVectorDocumentMapper(LuceneVersion version) : base(version)
         {
         }
 
-        public TermFreqVectorDocumentMapper(Version version, Analyzer externalAnalyzer)
+        public TermFreqVectorDocumentMapper(LuceneVersion version, Analyzer externalAnalyzer)
             : base(version, externalAnalyzer)
         {
         }
@@ -28,10 +29,12 @@ namespace Lucene.Net.Linq.Mapping
         {
             base.ToObject(source, context, target);
 
-            map[target] = context.Searcher.IndexReader.GetTermFreqVectors(context.CurrentScoreDoc.Doc);
+            // TODO-MIG
+            throw new NotImplementedException("Migration to LCNT 4.0.8");
+            //map[target] = context.Searcher.IndexReader.GetTermVector(context.CurrentScoreDoc.Doc, String.Empty );
         }
 
-        public ITermFreqVector[] this[T index]
+        public Term[] this[T index]
         {
             get { return map[index]; }
         }

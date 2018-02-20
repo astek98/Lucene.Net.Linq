@@ -1,5 +1,5 @@
-﻿using Lucene.Net.Linq.Search;
-using Lucene.Net.QueryParsers;
+using Lucene.Net.Linq.Search;
+using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 
 namespace Lucene.Net.Linq.Mapping
@@ -52,10 +52,10 @@ namespace Lucene.Net.Linq.Mapping
         Query CreateRangeQuery(object lowerBound, object upperBound, RangeType lowerRange, RangeType upperRange);
 
         /// <summary>
-        /// Creates an appropriate SortField instance for the
+        /// Creates an appropriate SortFieldType instance for the
         /// underlying Lucene field.
         /// </summary>
         /// <param name="reverse"></param>
-        SortField CreateSortField(bool reverse);
+        SortField CreateSortFieldType(bool reverse);
     }
 }

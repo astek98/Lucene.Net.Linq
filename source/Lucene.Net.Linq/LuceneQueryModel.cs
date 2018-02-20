@@ -151,7 +151,7 @@ namespace Lucene.Net.Linq
 
             var mapping = fieldMappingInfoProvider.GetMappingInfo(propertyName);
 
-            sorts.Add(mapping.CreateSortField(reverse));
+            sorts.Add(mapping.CreateSortFieldType(reverse));
         }
         
         public void AddBoostFunction(LambdaExpression expression)

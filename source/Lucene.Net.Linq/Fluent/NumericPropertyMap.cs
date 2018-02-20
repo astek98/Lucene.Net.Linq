@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Lucene.Net.Documents;
 using Lucene.Net.Linq.Mapping;
 using Lucene.Net.Util;
 
